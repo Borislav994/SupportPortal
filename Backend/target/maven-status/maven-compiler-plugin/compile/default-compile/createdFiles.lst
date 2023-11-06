@@ -1,6 +1,0 @@
-com/supportportal/domain/HttpResponse.class
-com/supportportal/resource/UserResource.class
-com/supportportal/constant/SecurityConstant.class
-com/supportportal/SupportPortalApplication.class
-com/supportportal/domain/UserEntity.class
-com/supportportal/domain/UserPrincipal.class
