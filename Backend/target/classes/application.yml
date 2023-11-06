@@ -1,0 +1,25 @@
+#spring.datasource.driver-class-name=org.postgresql.Driver
+#spring.datasource.url=jdbc:postgresql://localhost/follower?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+#spring.datasource.username=bora
+#spring.datasource.password=864285
+#
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/supportportal
+    username: bora
+    password: 864285
+    driver-class-name: org.postgresql.Driver
+
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create # ako je crate pri svakom pokretanju aplikacije brise sve tabele i kreira nove!
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
