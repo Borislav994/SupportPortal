@@ -10,6 +10,9 @@ jwt:
 
 server:
   port: 8081
+  error:
+    path: user/error
+
 
 spring:
   datasource:
@@ -17,8 +20,6 @@ spring:
     username: bora
     password: 864285
     driver-class-name: org.postgresql.Driver
-
-
   jpa:
     show-sql: true
     hibernate:
@@ -26,3 +27,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+#  mvc: (ovo je prvi nacin da se ukloni whitelabel error page)
+#    throw-exception-if-no-handler-found: true
+#  web:
+#    resources:
+#      add-mappings: false
