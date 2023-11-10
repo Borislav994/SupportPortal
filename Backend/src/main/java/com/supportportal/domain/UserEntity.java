@@ -1,16 +1,23 @@
 package com.supportportal.domain;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private Long id;
+
     private String userId;
     private String firstName;
     private String lastName;
@@ -21,7 +28,10 @@ public class UserEntity implements Serializable {
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
     private Date joinDate;
-    private String[] roles; // ROLE_USER{read, update}, ROLE_ADMIN{delete,update,create}...
+    private String role; // ROLE_USER{read, update}, ROLE_ADMIN{delete,update,create}...
+
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
     private String[] authorities; // {create, read, update, delete}
     private boolean isActive;
     private boolean isNotLocked;
@@ -29,7 +39,7 @@ public class UserEntity implements Serializable {
     public UserEntity(){}
 
     public UserEntity(Long id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate,
-                      Date lastLoginDateDisplay, Date joinDate, String[] roles, String[] authorities, boolean isActive, boolean isNotLocked) {
+                      Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
         this.id = id;
         this.userId = userId;
         this.firstName = firstName;
@@ -41,7 +51,7 @@ public class UserEntity implements Serializable {
         this.lastLoginDate = lastLoginDate;
         this.lastLoginDateDisplay = lastLoginDateDisplay;
         this.joinDate = joinDate;
-        this.roles = roles;
+        this.role = role;
         this.authorities = authorities;
         this.isActive = isActive;
         this.isNotLocked = isNotLocked;
@@ -135,12 +145,12 @@ public class UserEntity implements Serializable {
         this.joinDate = joinDate;
     }
 
-    public String[] getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(String[] roles) {
-        this.roles = roles;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String[] getAuthorities() {

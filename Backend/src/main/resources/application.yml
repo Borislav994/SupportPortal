@@ -11,7 +11,7 @@ jwt:
 server:
   port: 8081
   error:
-    path: user/error
+    path: error
 
 
 spring:
@@ -23,7 +23,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create # ako je crate pri svakom pokretanju aplikacije brise sve tabele i kreira nove!
+      ddl-auto: update # ako je create pri svakom pokretanju aplikacije brise sve tabele i kreira nove!
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

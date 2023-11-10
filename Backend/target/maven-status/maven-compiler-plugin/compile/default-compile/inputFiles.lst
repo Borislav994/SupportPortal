@@ -1,6 +1,21 @@
-/home/borislav/eclipse-workspace/supportportal/src/main/java/com/supportportal/resource/UserResource.java
-/home/borislav/eclipse-workspace/supportportal/src/main/java/com/supportportal/domain/UserEntity.java
-/home/borislav/eclipse-workspace/supportportal/src/main/java/com/supportportal/constant/SecurityConstant.java
-/home/borislav/eclipse-workspace/supportportal/src/main/java/com/supportportal/SupportPortalApplication.java
-/home/borislav/eclipse-workspace/supportportal/src/main/java/com/supportportal/domain/HttpResponse.java
-/home/borislav/eclipse-workspace/supportportal/src/main/java/com/supportportal/domain/UserPrincipal.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/exception/ExceptionHandling.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/filter/JwtAuthenticationEntryPoint.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/exception/domain/UserNotFoundException.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/repository/UserRepository.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/configuration/SecurityConfiguration.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/domain/UserEntity.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/constant/Authority.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/resource/UserResource.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/exception/domain/UsernameExistException.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/exception/domain/EmailNotFoundException.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/enumeration/Role.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/filter/JwtAccessDeniedHandler.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/service/UserService.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/exception/domain/EmailExistException.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/filter/JwtAuthorizationFilter.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/service/impl/UserServiceImpl.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/utility/JWTTokenProvider.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/domain/HttpResponse.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/constant/SecurityConstant.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/SupportPortalApplication.java
+/home/borislav/eclipse-workspace/SupportPortal Git/Backend/src/main/java/com/supportportal/domain/UserPrincipal.java
