@@ -77,22 +77,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return user;
     }
 
-    private String getTemporaryProfileImageUrl() {
-        return fromCurrentContextPath().path(DEFAULT_IMAGE_PATH).toUriString();
-    }
-
-    private String encodePassword(String password) {
-        return passwordEncoder.encode(password);
-    }
-
-    private String generatePassword() {
-        return RandomStringUtils.randomAlphanumeric(10);
-    }
-
-    private String generateUserId() {
-        return RandomStringUtils.randomNumeric(10);
-    }
-
     private UserEntity validateNewUsernameAndEmail(String currentUsername, String newUsername, String email) throws UserNotFoundException, UsernameExistException, EmailExistException {
         UserEntity userByNewUsername = findUserByUsername(newUsername);
         UserEntity userByNewEmail = findUserByEmail(email);
@@ -117,6 +101,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }
             return null;
         }
+    }
+
+    private String getTemporaryProfileImageUrl() {
+        return fromCurrentContextPath().path(DEFAULT_IMAGE_PATH).toUriString();
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    private String generatePassword() {
+        return RandomStringUtils.randomAlphanumeric(10);
+    }
+
+    private String generateUserId() {
+        return RandomStringUtils.randomNumeric(10);
     }
 
     @Override
