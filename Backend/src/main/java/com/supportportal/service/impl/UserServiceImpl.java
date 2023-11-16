@@ -6,6 +6,7 @@ import com.supportportal.exception.domain.EmailExistException;
 import com.supportportal.exception.domain.UserNotFoundException;
 import com.supportportal.exception.domain.UsernameExistException;
 import com.supportportal.repository.UserRepository;
+import com.supportportal.service.EmailService;
 import com.supportportal.service.LoginAttemptService;
 import com.supportportal.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -20,10 +21,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.supportportal.constant.UserImplConstant.*;
 import static com.supportportal.enumeration.Role.*;
@@ -41,6 +42,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private LoginAttemptService loginAttemptService;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -59,20 +62,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    private void validateLoginAttempt(UserEntity user) {
-        if(user.isNotLocked()){
-            if(loginAttemptService.hasExceededMaxAttempt(user.getUsername())){
-                user.setNotLocked(false);
-            } else {
-                user.setNotLocked(true);
-            }
-        }else {
-            loginAttemptService.evictUserFromLoginAttemptCache(user.getUsername());
-        }
-    }
-
     @Override
-    public UserEntity register(String firstName, String lastName, String username, String email) throws UserNotFoundException, EmailExistException, UsernameExistException {
+    public UserEntity register(String firstName, String lastName, String username, String email) throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException {
         validateNewUsernameAndEmail(StringUtils.EMPTY, username, email);
         UserEntity user = new UserEntity();
         user.setUserId(generateUserId());
@@ -91,6 +82,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl());
         userRepository.save(user);
         LOGGER.info("New user password: " + password);
+        emailService.sendNewPasswordEmail(firstName, password, email);
         return user;
     }
 
@@ -120,6 +112,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    @Override
+    public List<UserEntity> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public UserEntity findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public UserEntity findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    private void validateLoginAttempt(UserEntity user) {
+        if(user.isNotLocked()){
+            if(loginAttemptService.hasExceededMaxAttempt(user.getUsername())){
+                user.setNotLocked(false);
+            } else {
+                user.setNotLocked(true);
+            }
+        }else {
+            loginAttemptService.evictUserFromLoginAttemptCache(user.getUsername());
+        }
+    }
+
     private String getTemporaryProfileImageUrl() {
         return fromCurrentContextPath().path(DEFAULT_IMAGE_PATH).toUriString();
     }
@@ -134,20 +153,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private String generateUserId() {
         return RandomStringUtils.randomNumeric(10);
-    }
-
-    @Override
-    public List<UserEntity> getUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public UserEntity findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
-    }
-
-    @Override
-    public UserEntity findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
     }
 }
