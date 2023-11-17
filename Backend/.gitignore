@@ -1,0 +1,4 @@
+# .gitignore
+
+# Ignoriši EmailConstant klasu
+/src/main/java/com/supportportal/constant/EmailConstant.java
