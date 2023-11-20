@@ -78,13 +78,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         UserEntity user = new UserEntity();
         user.setUserId(generateUserId());
         String password = generatePassword();
-        String encodedPassword = encodePassword(password);
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(username);
         user.setEmail(email);
         user.setJoinDate(new Date());
-        user.setPassword(encodedPassword);
+        user.setPassword(encodePassword(password));
         user.setActive(true);
         user.setNotLocked(true);
         user.setRole(ROLE_USER.name());
@@ -128,6 +127,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         currentUser.setActive(isActive);
         currentUser.setNotLocked(isNonLocked);
         currentUser.setRole(getRoleEnumName(role).name());
+        currentUser.setAuthorities(getRoleEnumName(role).getAuthorities());
         userRepository.save(currentUser);
         saveProfileImage(currentUser, profileImage);
         return currentUser;
@@ -231,7 +231,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
             if(!Files.exists(userFolder)){
                 Files.createDirectories(userFolder);
-                LOGGER.info(DIRECTORY_CREATED);
+                LOGGER.info(DIRECTORY_CREATED + userFolder);
             }
             Files.deleteIfExists(Paths.get(userFolder + user.getUsername() + DOT + JPG_EXTENSION));
             Files.copy(profileImage.getInputStream(), userFolder.resolve(user.getUsername() + DOT + JPG_EXTENSION), REPLACE_EXISTING );
