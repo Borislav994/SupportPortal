@@ -61,6 +61,15 @@ public class UserResource extends ExceptionHandling {
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserEntity> login(@RequestBody UserEntity user) {
+        authenticate(user.getUsername(), user.getPassword());
+        UserEntity loginUser = userService.findUserByUsername(user.getUsername());
+        UserPrincipal userPrincipal = new UserPrincipal(loginUser);
+        HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
+        return new ResponseEntity<>(loginUser, jwtHeader, HttpStatus.OK);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<UserEntity> addUser(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
                                               @RequestParam("username") String username,
@@ -136,15 +145,6 @@ public class UserResource extends ExceptionHandling {
             }
         }
         return byteArrayOutputStream.toByteArray();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<UserEntity> login(@RequestBody UserEntity user) {
-        authenticate(user.getUsername(), user.getPassword());
-        UserEntity loginUser = userService.findUserByUsername(user.getUsername());
-        UserPrincipal userPrincipal = new UserPrincipal(loginUser);
-        HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
-        return new ResponseEntity<>(loginUser, jwtHeader, HttpStatus.OK);
     }
 
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
