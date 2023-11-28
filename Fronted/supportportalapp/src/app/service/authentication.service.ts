@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   
-  private host = environment.apiUrl;
+  public host = environment.apiUrl;
   private token: string | null;
   private loggedInUsername: string | null;
   private jwtHelper = new JwtHelperService();
