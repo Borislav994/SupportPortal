@@ -31,7 +31,7 @@ export class UserService {
   }
 
   public updateProfileImage(formData: FormData): Observable<HttpEvent<User> | HttpErrorResponse> {
-    return this.http.post<User>(`${this.host}/user/updateProfileImage`, formData, {reportProgress: true, observe: 'events'});
+    return this.http.post<User>(`${this.host}/user/updateProfileImage`, formData, { reportProgress: true, observe: 'events' });
   }
 
   public deleteUser(userId: number): Observable<CustomHttpResponse | HttpErrorResponse> {
@@ -39,18 +39,18 @@ export class UserService {
   }
 
   public addUserToLocalCache(users: User[]): void {
-     localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('users', JSON.stringify(users));
   }
 
   public getUsersFromLocalCache(): User[] | null {
-    if (localStorage.getItem('users')){
+    if (localStorage.getItem('users')) {
       const usersString = localStorage.getItem('users');
       return usersString ? JSON.parse(usersString) : null
     }
     return null;
   }
 
-  public createUserFormData(loggedInUsername: string, user: User, profileImage: File): FormData{
+  public createUserFormData(loggedInUsername: string, user: User, profileImage: File): FormData {
     const formData = new FormData();
     formData.append('currentUsername', loggedInUsername);
     formData.append('firstName', user.firstName);
