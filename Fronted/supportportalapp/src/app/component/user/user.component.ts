@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserComponent implements OnInit {
 
+  private titleSubject = new BehaviorSubject<string>('Users');
+  public titleAction$ = this.titleSubject.asObservable();
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  public changeTitle(title: string): void {
+    this.titleSubject.next(title);
   }
 
 }
