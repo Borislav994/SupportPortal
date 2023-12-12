@@ -14,28 +14,31 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  public getUsers(): Observable<User[] | HttpErrorResponse> {
+  public getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.host}/user/list`);
   }
 
-  public addUser(formData: FormData): Observable<User | HttpErrorResponse> {
+  public addUser(formData: FormData): Observable<User> {
     return this.http.post<User>(`${this.host}/user/add`, formData);
   }
 
-  public updateUser(formData: FormData): Observable<User | HttpErrorResponse> {
+  public updateUser(formData: FormData): Observable<User> {
     return this.http.post<User>(`${this.host}/user/update`, formData);
   }
 
-  public resetPassword(email: string): Observable<CustomHttpResponse | HttpErrorResponse> {
-    return this.http.get<CustomHttpResponse>(`${this.host}/user/resetPassword/${email}`);
+  public resetPassword(email: string): Observable<CustomHttpResponse> {
+    return this.http.get<CustomHttpResponse>(`${this.host}/user/resetpassword/${email}`);
   }
 
-  public updateProfileImage(formData: FormData): Observable<HttpEvent<User> | HttpErrorResponse> {
-    return this.http.post<User>(`${this.host}/user/updateProfileImage`, formData, { reportProgress: true, observe: 'events' });
+  public updateProfileImage(formData: FormData): Observable<HttpEvent<User>> {
+    return this.http.post<User>(`${this.host}/user/updateProfileImage`, formData,
+    {reportProgress: true,
+      observe: 'events'
+    });
   }
 
-  public deleteUser(userId: number): Observable<CustomHttpResponse | HttpErrorResponse> {
-    return this.http.delete<CustomHttpResponse>(`${this.host}/user/delete/${userId}}`);
+  public deleteUser(username: string): Observable<CustomHttpResponse> {
+    return this.http.delete<CustomHttpResponse>(`${this.host}/user/delete/${username}`);
   }
 
   public addUserToLocalCache(users: User[]): void {
@@ -50,7 +53,7 @@ export class UserService {
     return null;
   }
 
-  public createUserFormData(loggedInUsername: string, user: User, profileImage: File): FormData {
+  public createUserFormDate(loggedInUsername: string, user: User, profileImage: File): FormData {
     const formData = new FormData();
     formData.append('currentUsername', loggedInUsername);
     formData.append('firstName', user.firstName);
