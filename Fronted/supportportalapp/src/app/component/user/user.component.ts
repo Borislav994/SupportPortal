@@ -77,9 +77,28 @@ export class UserComponent implements OnInit, OnDestroy {
       this.fileName = file.name;
       this.profileImage = file;
     } else {
-      // Ako ne uspete da dobijete validan 'file', možete obraditi ovo ovde.
       console.error("Nije izabran validan fajl.");
     }
+  }
+
+  onUpdateProfileImage(): void {
+    const formData = new FormData();
+    formData.append('username', this.user?.username || ''); 
+    if (this.profileImage) {
+      formData.append('profileImage', this.profileImage);
+    }
+  
+    this.subscriptions.push(
+      this.userService.updateProfileImage(formData).subscribe(
+        (event: HttpEvent<any>) => {
+          this.reportUploadProgress(event);
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+          this.fileStatus.status = 'done';
+        }
+      )
+    );
   }
 
   public saveNewUser(): void {
@@ -87,7 +106,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   public onAddNewUser(userForm: NgForm): void {
-    if (this.profileImage !== null && this.profileImage !== undefined) {
+    
       const formData = this.userService.createUserFormDate('', userForm.value, this.profileImage);
       this.subscriptions.push(
         this.userService.addUser(formData).subscribe(
@@ -105,14 +124,12 @@ export class UserComponent implements OnInit, OnDestroy {
           }
         )
       );
-    } else {
-      console.error("profileImage is null");
-    }
+  
     
   }
 
   public onUpdateUser(): void {
-    if (this.profileImage !== null && this.profileImage !== undefined) {
+    
       const formData = this.userService.createUserFormDate(this.currentUsername, this.editUser, this.profileImage);
       this.subscriptions.push(
         this.userService.updateUser(formData).subscribe(
@@ -129,19 +146,15 @@ export class UserComponent implements OnInit, OnDestroy {
           }
         )
       );
-    } else {
-      console.error("profileImage is null or undefined");
-    }
+    
   }
   
-
   public onUpdateCurrentUser(user: User): void {
     this.refreshing = true;
     
     const userFromCache = this.authenticationService.getUserFromLocalCache();
     this.currentUsername = userFromCache ? userFromCache.username : '';
-    
-    if (this.profileImage !== null && this.profileImage !== undefined) {
+  
       const formData = this.userService.createUserFormDate(this.currentUsername, user, this.profileImage);
       this.subscriptions.push(
         this.userService.updateUser(formData).subscribe(
@@ -160,34 +173,8 @@ export class UserComponent implements OnInit, OnDestroy {
           }
         )
       );
-    } else {
-      console.error("profileImage is null or undefined");
-      this.refreshing = false;
-    }
   }
   
-  onUpdateProfileImage(): void {
-    // Vaša logika za ažuriranje profila
-    const formData = new FormData();
-    formData.append('username', this.user?.username || ''); // Koristićemo nullish coalescing za osiguranje da je vrednost sigurno postavljena.
-    if (this.profileImage) {
-      formData.append('profileImage', this.profileImage);
-    }
-  
-    this.subscriptions.push(
-      this.userService.updateProfileImage(formData).subscribe(
-        (event: HttpEvent<any>) => {
-          this.reportUploadProgress(event);
-        },
-        (errorResponse: HttpErrorResponse) => {
-          this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
-          this.fileStatus.status = 'done';
-        }
-      )
-    );
-  }
-  
-
   private reportUploadProgress(event: HttpEvent<any>): void {
     switch (event.type) {
       case HttpEventType.UploadProgress:
@@ -243,9 +230,9 @@ export class UserComponent implements OnInit, OnDestroy {
     );
   }
 
-  public onDeleteUder(username: string): void {
+  public onDeleteUder(userId: string): void {
     this.subscriptions.push(
-      this.userService.deleteUser(username).subscribe(
+      this.userService.deleteUser(userId).subscribe(
         (response: CustomHttpResponse) => {
           this.sendNotification(NotificationType.SUCCESS, response.message);
           this.getUsers(false);

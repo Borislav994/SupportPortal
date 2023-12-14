@@ -25,6 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,6 +57,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private LoginAttemptService loginAttemptService;
     @Autowired
     private EmailService emailService;
+
+    @PersistenceContext
+    private EntityManager em;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -151,6 +158,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void deleteUser(long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteUserByUserId(String userId) {
+        Query q = em.createNativeQuery("DELETE FROM user_entity WHERE user_id = :userId");
+        q.setParameter("userId", userId);
+        q.executeUpdate();
     }
 
     @Override

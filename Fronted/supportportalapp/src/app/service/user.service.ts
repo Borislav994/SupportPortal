@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpParams, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
@@ -27,7 +27,8 @@ export class UserService {
   }
 
   public resetPassword(email: string): Observable<CustomHttpResponse> {
-    return this.http.get<CustomHttpResponse>(`${this.host}/user/resetpassword/${email}`);
+    const params = new HttpParams().set('email', email);
+    return this.http.post<CustomHttpResponse>(`${this.host}/user/resetPassword`, null, { params });
   }
 
   public updateProfileImage(formData: FormData): Observable<HttpEvent<User>> {
@@ -37,8 +38,8 @@ export class UserService {
     });
   }
 
-  public deleteUser(username: string): Observable<CustomHttpResponse> {
-    return this.http.delete<CustomHttpResponse>(`${this.host}/user/delete/${username}`);
+  public deleteUser(userId: string): Observable<CustomHttpResponse> {
+    return this.http.delete<CustomHttpResponse>(`${this.host}/user/delete/${userId}`);
   }
 
   public addUserToLocalCache(users: User[]): void {
