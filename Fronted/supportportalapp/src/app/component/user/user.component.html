@@ -313,8 +313,8 @@
         </div>
 
         <!-- modal user info -->
-        <div *ngIf="selectedUser" class="modal fade bd-example-modal-lg" id="viewUserModal" tabindex="-1" role="dialog" aria-labelledby=""
-            aria-hidden="true">
+        <div *ngIf="selectedUser" class="modal fade bd-example-modal-lg" id="viewUserModal" tabindex="-1" role="dialog"
+            aria-labelledby="" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -666,7 +666,5 @@
         <form enctype="multipart/form-data" style="display:none;">
             <input type="file" (change)="onProfileImageChange($event); onUpdateProfileImage()"
                 name="profile-image-input" id="profile-image-input" placeholder="file" accept="image/*" />
-
         </form>
-
     </div>

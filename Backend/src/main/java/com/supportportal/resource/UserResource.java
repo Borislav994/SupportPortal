@@ -4,10 +4,7 @@ import com.supportportal.domain.HttpResponse;
 import com.supportportal.domain.UserEntity;
 import com.supportportal.domain.UserPrincipal;
 import com.supportportal.exception.ExceptionHandling;
-import com.supportportal.exception.domain.EmailExistException;
-import com.supportportal.exception.domain.EmailNotFoundException;
-import com.supportportal.exception.domain.UserNotFoundException;
-import com.supportportal.exception.domain.UsernameExistException;
+import com.supportportal.exception.domain.*;
 import com.supportportal.service.UserService;
 import com.supportportal.utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,6 @@ import java.util.List;
 
 import static com.supportportal.constant.FileConstant.*;
 import static com.supportportal.constant.SecurityConstant.JWT_TOKEN_HEADER;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
@@ -77,7 +73,7 @@ public class UserResource extends ExceptionHandling {
                                               @RequestParam("role") String role,
                                               @RequestParam("isActive") String isActive,
                                               @RequestParam("isNonLocked") String isNonLocked,
-                                              @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
+                                              @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, NotImageFileException {
         UserEntity newUser = userService.addNewUser(firstName, lastName, username, email, role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
         return new ResponseEntity<UserEntity>(newUser, OK);
     }
@@ -91,7 +87,7 @@ public class UserResource extends ExceptionHandling {
                                               @RequestParam("role") String role,
                                               @RequestParam("isActive") String isActive,
                                               @RequestParam("isNonLocked") String isNonLocked,
-                                              @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
+                                              @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, NotImageFileException {
         UserEntity updatedUser = userService.updateUser(currentUsername, firstName, lastName, username, email, role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
         return new ResponseEntity<>(updatedUser, OK);
     }
@@ -117,14 +113,14 @@ public class UserResource extends ExceptionHandling {
 
     @DeleteMapping("/delete/{userId}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("userId") String userId){
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("userId") String userId) throws IOException {
         userService.deleteUserByUserId(userId);
         return response(OK, USER_DELETED_SUCCESSFULLY);
     }
 
     @PostMapping("/updateProfileImage")
     public ResponseEntity<UserEntity> updateProfileImage(@RequestParam("username") String username,
-                                                         @RequestParam(value = "profileImage") MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
+                                                         @RequestParam(value = "profileImage") MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, UsernameExistException, NotImageFileException {
         UserEntity user = userService.updateProfileImage(username, profileImage);
         return new ResponseEntity<>(user, OK);
     }

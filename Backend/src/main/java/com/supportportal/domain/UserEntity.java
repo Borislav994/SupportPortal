@@ -1,5 +1,6 @@
 package com.supportportal.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Type;
@@ -16,12 +17,13 @@ public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
-
     private String userId;
     private String firstName;
     private String lastName;
     private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String email;
     private String profileImageUrl;

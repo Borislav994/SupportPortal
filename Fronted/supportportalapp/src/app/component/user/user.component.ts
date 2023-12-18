@@ -11,6 +11,7 @@ import { AuthenticationService } from 'src/app/service/authentication.service';
 import { Router } from '@angular/router';
 import { FileUploadStatus } from 'src/app/model/file-upload.status';
 import { Role } from 'src/app/enum/role.enum';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-user',
@@ -18,6 +19,9 @@ import { Role } from 'src/app/enum/role.enum';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit, OnDestroy {
+
+  private subs = new SubSink();
+
   private titleSubject = new BehaviorSubject<string>('Users');
   public titleAction$ = this.titleSubject.asObservable();
   public users: User[] | null;
@@ -45,7 +49,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   public getUsers(showNotification: boolean): void {
     this.refreshing = true;
-    this.subscriptions.push(
+    this.subs.add(
       this.userService.getUsers().subscribe(
         (response: User[]) => {
           this.userService.addUserToLocalCache(response);
@@ -83,12 +87,12 @@ export class UserComponent implements OnInit, OnDestroy {
 
   onUpdateProfileImage(): void {
     const formData = new FormData();
-    formData.append('username', this.user?.username || ''); 
+    formData.append('username', this.user?.username || '');
     if (this.profileImage) {
       formData.append('profileImage', this.profileImage);
     }
   
-    this.subscriptions.push(
+    this.subs.add(
       this.userService.updateProfileImage(formData).subscribe(
         (event: HttpEvent<any>) => {
           this.reportUploadProgress(event);
@@ -108,7 +112,7 @@ export class UserComponent implements OnInit, OnDestroy {
   public onAddNewUser(userForm: NgForm): void {
     
       const formData = this.userService.createUserFormDate('', userForm.value, this.profileImage);
-      this.subscriptions.push(
+      this.subs.add(
         this.userService.addUser(formData).subscribe(
           (response: User) => {
             this.clickButton('new-user-close');
@@ -131,7 +135,7 @@ export class UserComponent implements OnInit, OnDestroy {
   public onUpdateUser(): void {
     
       const formData = this.userService.createUserFormDate(this.currentUsername, this.editUser, this.profileImage);
-      this.subscriptions.push(
+      this.subs.add(
         this.userService.updateUser(formData).subscribe(
           (response: User) => {
             this.clickButton('closeEditUserModalButton');
@@ -156,7 +160,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.currentUsername = userFromCache ? userFromCache.username : '';
   
       const formData = this.userService.createUserFormDate(this.currentUsername, user, this.profileImage);
-      this.subscriptions.push(
+      this.subs.add(
         this.userService.updateUser(formData).subscribe(
           (response: User) => {
             this.authenticationService.addUserToLocalCache(response);
@@ -215,7 +219,7 @@ export class UserComponent implements OnInit, OnDestroy {
   public onResetPassword(emailForm: NgForm): void {
     this.refreshing = true;
     const emailAddress = emailForm.value['reset-password-email'];
-    this.subscriptions.push(
+    this.subs.add(
       this.userService.resetPassword(emailAddress).subscribe(
         (response: CustomHttpResponse) => {
           this.sendNotification(NotificationType.SUCCESS, response.message);
@@ -231,7 +235,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteUder(userId: string): void {
-    this.subscriptions.push(
+    this.subs.add(
       this.userService.deleteUser(userId).subscribe(
         (response: CustomHttpResponse) => {
           this.sendNotification(NotificationType.SUCCESS, response.message);
@@ -288,8 +292,10 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   private getUserRole(): string {
-    const user = this.authenticationService.getUserFromLocalCache();
-    return user ? user.role : '';
+    // const user = this.authenticationService.getUserFromLocalCache();
+    // return user ? user.role : '';
+
+    return this.authenticationService.getUserFromLocalCache().role;
   }
   
 
@@ -305,8 +311,7 @@ export class UserComponent implements OnInit, OnDestroy {
     document.getElementById(buttonId)?.click();
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
-
 }
