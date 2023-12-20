@@ -292,9 +292,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   private getUserRole(): string {
-    // const user = this.authenticationService.getUserFromLocalCache();
-    // return user ? user.role : '';
-
     return this.authenticationService.getUserFromLocalCache().role;
   }
   
@@ -312,6 +309,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subs.unsubscribe();
+    this.subs.unsubscribe()
+    ;
   }
 }
